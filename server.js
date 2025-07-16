@@ -24,21 +24,28 @@ const auth = new google.auth.GoogleAuth({
 const SHEET_ID = process.env.SHEET_ID;
 
 async function appendToSheet({ name, email, ip, location }) {
-  const client = await auth.getClient();
-  const sheets = google.sheets({ version: 'v4', auth: client });
+  try {
+    const client = await auth.getClient();
+    const sheets = google.sheets({ version: 'v4', auth: client });
 
-  const timestamp = new Date().toISOString();
-  const row = [timestamp, name, email, ip, location];
+    const timestamp = new Date().toISOString();
+    const row = [timestamp, name, email, ip, location];
 
-  await sheets.spreadsheets.values.append({
-    spreadsheetId: SHEET_ID,
-    range: 'portfolio-server-log!A1:E1',
-    valueInputOption: 'RAW',
-    requestBody: {
-      values: [row],
-    },
-  });
+    await sheets.spreadsheets.values.append({
+      spreadsheetId: SHEET_ID,
+      range: 'portfolio-server-log!A1:E1',
+      valueInputOption: 'RAW',
+      requestBody: {
+        values: [row],
+      },
+    });
+
+    console.log("✅ Row appended!");
+  } catch (error) {
+    console.error("❌ Google Sheets Error:", error.message);
+  }
 }
+
 
 app.post('/log', async (req, res) => {
   const { name, email } = req.body;
