@@ -2,7 +2,7 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
-const useragent = require('useragent');
+const UAParser = require('ua-parser-js'); // ✅ updated parser
 const { google } = require('googleapis');
 require('dotenv').config();
 
@@ -52,10 +52,10 @@ app.post('/log', async (req, res) => {
   console.log("📬 POST /log received");
 
   const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-  const userAgentHeader = req.headers['user-agent'];
-  const agent = useragent.parse(userAgentHeader);
-  const browser = agent.toAgent();
-  const os = agent.os.toString();
+  const parser = new UAParser(req.headers['user-agent']);
+  const uaResult = parser.getResult();
+  const browser = `${uaResult.browser.name} ${uaResult.browser.version}`;
+  const os = `${uaResult.os.name} ${uaResult.os.version}`;
   const timestamp = new Date().toISOString();
   const requestPath = req.originalUrl;
   const referrer = req.headers['referer'] || 'Direct';
