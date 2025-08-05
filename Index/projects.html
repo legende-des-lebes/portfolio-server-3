@@ -1,36 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Hollow Flower 3D Model by [RLV]</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="projects_style.css">
-  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hollow Flower - 3D Printable Model</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      height: 100vh;
+      margin: 0;
+      background: #f9f9f9;
+    }
+    .left-panel {
+      width: 40%;
+      padding: 30px;
+      box-sizing: border-box;
+      background-color: #fff;
+    }
+    .right-panel {
+      width: 60%;
+      background: #111;
+    }
+    h1 {
+      color: #222;
+      font-size: 2em;
+      margin-bottom: 10px;
+    }
+    p {
+      font-size: 1.1em;
+      line-height: 1.6;
+    }
+    a.download {
+      display: inline-block;
+      margin-top: 20px;
+      color: #007bff;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    footer {
+      margin-top: 40px;
+      font-size: 0.9em;
+      color: #888;
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
+  <div class="left-panel">
     <h1>🌸 Hollow Flower - 3D Printable Model</h1>
-    <p>This is a custom-designed, 3D printable hollow flower created using Blender. It's flat-backed and designed for wall-mounting in a 1ft x 1ft area. Perfect for decor or gifting!</p>
-
-    <!-- 3D Viewer -->
-    <model-viewer
-      src="models/Akka_02.stl"
-      alt="Hollow flower 3D model"
-      auto-rotate
-      camera-controls
-      ar
-      style="width: 100%; height: 500px;"
-      exposure="1"
-      shadow-intensity="1"
-      environment-image="neutral"
-    ></model-viewer>
-
-    <!-- Download Link -->
-    <a class="button" href="models/Akka_02.stl" download>⬇️ Download STL File</a>
-
+    <p>
+      This is a custom-designed, 3D printable hollow flower created using Blender. It's flat-backed and designed for wall-mounting in a 1ft x 1ft area. Perfect for decor or gifting!
+    </p>
+    <a class="download" href="models/Akka_02.stl" download>⬇️ Download STL File</a>
     <footer>
-      <p>&copy; 2025 [Your Name]. All rights reserved.</p>
+      © 2025 [Your Name]. All rights reserved.
     </footer>
   </div>
+
+  <div class="right-panel">
+    <canvas id="viewer"></canvas>
+  </div>
+
+  <!-- Three.js + STL Loader -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.154.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.154.0/examples/js/loaders/STLLoader.js"></script>
+  <script>
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(45, window.innerWidth * 0.6 / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById("viewer"), antialias: true });
+    renderer.setSize(window.innerWidth * 0.6, window.innerHeight);
+    renderer.setClearColor(0x111111);
+
+    const light1 = new THREE.DirectionalLight(0xffffff, 1);
+    light1.position.set(1, 1, 1).normalize();
+    scene.add(light1);
+
+    const light2 = new THREE.AmbientLight(0x404040);
+    scene.add(light2);
+
+    const loader = new THREE.STLLoader();
+    loader.load('models/Akka_02.stl', function (geometry) {
+      const material = new THREE.MeshStandardMaterial({ color: 0xff69b4, metalness: 0.2, roughness: 0.5 });
+      const mesh = new THREE.Mesh(geometry, material);
+      geometry.center();
+      mesh.rotation.x = -Math.PI / 2;
+      scene.add(mesh);
+
+      camera.position.set(0, 0, 100);
+      const animate = function () {
+        requestAnimationFrame(animate);
+        mesh.rotation.z += 0.01;
+        renderer.render(scene, camera);
+      };
+      animate();
+    }, undefined, function (error) {
+      console.error("Error loading STL:", error);
+    });
+
+    window.addEventListener('resize', () => {
+      const width = window.innerWidth * 0.6;
+      const height = window.innerHeight;
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+      renderer.setSize(width, height);
+    });
+  </script>
 </body>
 </html>
