@@ -56,7 +56,7 @@
     <p>
       This is a custom-designed, 3D printable hollow flower created using Blender. It's flat-backed and designed for wall-mounting in a 1ft x 1ft area. Perfect for decor or gifting!
     </p>
-    <a class="download" href="models/Akka_02.stl" download>⬇️ Download STL File</a>
+    <a class="download" href="flower.stl" download>⬇️ Download STL File</a>
     <footer>
       © 2025 [Your Name]. All rights reserved.
     </footer>
@@ -84,7 +84,7 @@
     scene.add(light2);
 
     const loader = new THREE.STLLoader();
-    loader.load('models/Akka_02.stl', function (geometry) {
+    loader.load('flower.stl', function (geometry) {
       const material = new THREE.MeshStandardMaterial({ color: 0xff69b4, metalness: 0.2, roughness: 0.5 });
       const mesh = new THREE.Mesh(geometry, material);
       geometry.center();
