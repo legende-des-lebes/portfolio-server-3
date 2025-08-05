@@ -2,7 +2,7 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
-const UAParser = require('ua-parser-js'); // ✅ updated parser
+const UAParser = require('ua-parser-js');
 const { google } = require('googleapis');
 require('dotenv').config();
 
@@ -10,9 +10,11 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
+
+// ✅ Serve all files from "Index" directory
 app.use(express.static(path.join(__dirname, 'Index')));
 
-// ✅ Google Sheets Auth
+// ✅ Google Sheets Authentication
 const auth = new google.auth.GoogleAuth({
   credentials: {
     client_email: process.env.GOOGLE_CLIENT_EMAIL,
@@ -22,7 +24,7 @@ const auth = new google.auth.GoogleAuth({
 });
 const SHEET_ID = process.env.SHEET_ID;
 
-// ✅ Append data to Google Sheet
+// ✅ Function to append data to Google Sheet
 async function appendToSheet({ name, email, ip, location, browser, os, timestamp, path, referrer }) {
   try {
     const client = await auth.getClient();
@@ -47,7 +49,7 @@ async function appendToSheet({ name, email, ip, location, browser, os, timestamp
   }
 }
 
-// ✅ POST route for logging
+// ✅ POST route for client logging
 app.post('/log', async (req, res) => {
   console.log("📬 POST /log received");
 
@@ -97,9 +99,14 @@ app.post('/log', async (req, res) => {
   }
 });
 
-// ✅ Serve index page
+// ✅ Serve homepage
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'Index', 'index.html'));
+});
+
+// ✅ Serve student.html explicitly (optional, ensures route works)
+app.get('/student.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'Index', 'student.html'));
 });
 
 // ✅ Start server

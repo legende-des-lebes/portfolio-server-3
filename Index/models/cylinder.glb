@@ -1,0 +1,26 @@
+import bpy
+import math
+
+# Clear scene
+bpy.ops.object.select_all(action='SELECT')
+bpy.ops.object.delete(use_global=False)
+
+# Create cylinder
+bpy.ops.mesh.primitive_cylinder_add(radius=1, depth=2, align="WORLD", location=(0, 0, 1))
+cylinder = bpy.context.active_object
+cylinder.name = "My_Cylinder"
+
+# Add red material
+mat = bpy.data.materials.new(name="RedMaterial")
+mat.diffuse_color = (1, 0, 0, 1)  # Red with full alpha
+cylinder.data.materials.append(mat)
+
+# Add floating animation using drivers (sine wave motion on Z-axis)
+driver = cylinder.driver_add("location", 2).driver  # Z-axis = index 2
+driver.type = 'SCRIPTED'
+var = driver.variables.new()
+var.name = "frame"
+var.targets[0].id_type = 'SCENE'
+var.targets[0].id = bpy.context.scene
+var.targets[0].data_path = "frame_current"
+driver.expression = "sin(frame / 20.0) * 0.5"

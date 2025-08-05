@@ -4,7 +4,30 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Welcome | Your Portfolio</title>
-  <link rel="stylesheet" href="css\style.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+    main, header, footer {
+      position: relative;
+      z-index: 1;
+      color: white;
+      text-align: center;
+    }
+    body {
+      margin: 0;
+      overflow: hidden;
+      background-color: #000;
+      font-family: sans-serif;
+    }
+    .options {
+      margin-top: 1em;
+    }
+  </style>
 </head>
 <body>
   <header>RLV</header>
@@ -23,6 +46,10 @@
 
   <footer>© 2025 Your Name • All rights reserved</footer>
 
+  <!-- Three.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+
+  <!-- Main JS -->
   <script src="js/main.js"></script>
 </body>
-</html> 
+</html>
